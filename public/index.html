@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Green Edge Landscaping — Proposal Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --green-dark: #1a2e1a;
+  --green: #2d5a27;
+  --green-mid: #4a8c3f;
+  --green-light: #7bc46e;
+  --cream: #f9f6f0;
+  --cream-dark: #ede9e1;
+  --text: #1e2a1e;
+  --muted: #7a8c7a;
+  --white: #ffffff;
+}
+body { background: var(--cream); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+header {
+  background: var(--green-dark); padding: 0 48px;
+  display: flex; align-items: center; justify-content: space-between; height: 70px;
+  position: relative; overflow: hidden;
+}
+header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--green-mid), var(--green-light), var(--green-mid));
+}
+.logo-area { display: flex; align-items: center; gap: 14px; }
+.logo-icon { width: 38px; height: 38px; background: var(--green-mid); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.logo-text { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 20px; color: var(--cream); }
+.logo-text span { color: var(--green-light); }
+.header-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); opacity: 0.7; }
+.app { max-width: 1000px; margin: 0 auto; padding: 48px 32px 80px; }
+.page-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--green-dark); margin-bottom: 6px; }
+.page-sub { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.panel { background: var(--white); border-radius: 12px; border: 1px solid var(--cream-dark); padding: 32px; box-shadow: 0 2px 20px rgba(30,46,30,0.06); }
+.panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--cream-dark); }
+.panel-icon { width: 34px; height: 34px; background: var(--green-dark); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.panel-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; color: var(--green-dark); }
+.field { margin-bottom: 18px; }
+label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+input, select, textarea {
+  width: 100%; background: var(--cream); border: 1.5px solid var(--cream-dark);
+  border-radius: 8px; color: var(--text); font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 500; padding: 11px 14px; outline: none;
+  transition: border-color 0.2s; appearance: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--green-mid); background: white; }
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8c7a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+.svc-check {
+  display: flex; align-items: center; gap: 10px; background: var(--cream);
+  border: 1.5px solid var(--cream-dark); border-radius: 8px; padding: 10px 12px;
+  cursor: pointer; transition: all 0.15s; font-size: 13px; font-weight: 500;
+  color: var(--muted); user-select: none;
+}
+.svc-check:hover { border-color: var(--green-mid); color: var(--text); }
+.svc-check.active { background: rgba(45,90,39,0.08); border-color: var(--green-mid); color: var(--green-dark); }
+.check-box { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; }
+.svc-check.active .check-box { background: var(--green-mid); border-color: var(--green-mid); color: white; }
+.generate-btn {
+  width: 100%; background: var(--green-dark); color: var(--cream); border: none;
+  border-radius: 10px; font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 18px; padding: 16px; cursor: pointer; margin-top: 6px;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.generate-btn:hover { background: var(--green); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,46,30,0.25); }
+.generate-btn:disabled { background: #ccc; color: #999; cursor: not-allowed; transform: none; box-shadow: none; }
+.output-panel { background: var(--white); border-radius: 12px; border: 1px solid var(--cream-dark); padding: 32px; box-shadow: 0 2px 20px rgba(30,46,30,0.06); display: flex; flex-direction: column; }
+.output-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--cream-dark); }
+.action-btn { background: var(--cream); border: 1.5px solid var(--cream-dark); color: var(--muted); padding: 7px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; font-family: 'Nunito', sans-serif; transition: all 0.15s; }
+.action-btn:hover { border-color: var(--green-mid); color: var(--green-dark); }
+.action-btn.copied { border-color: var(--green-mid); color: var(--green-mid); }
+.output-body { flex: 1; min-height: 340px; position: relative; }
+.placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+.placeholder-leaf { font-size: 48px; opacity: 0.2; }
+.placeholder p { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 220px; }
+.loading { display: none; flex-direction: column; align-items: center; justify-content: center; height: 340px; gap: 16px; }
+.leaf-spin { font-size: 36px; animation: leafSpin 1.2s ease-in-out infinite; }
+@keyframes leafSpin { 0%, 100% { transform: rotate(-15deg) scale(1); } 50% { transform: rotate(15deg) scale(1.1); } }
+.loading p { color: var(--muted); font-size: 13px; letter-spacing: 1px; }
+.proposal-output { display: none; font-size: 14px; line-height: 1.8; color: var(--text); white-space: pre-wrap; font-weight: 400; }
+.stats-row { display: none; gap: 0; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--cream-dark); }
+.stat-item { flex: 1; text-align: center; padding: 0 16px; border-right: 1px solid var(--cream-dark); }
+.stat-item:last-child { border-right: none; }
+.stat-val { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: var(--green-mid); display: block; }
+.stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.bottom-bar { background: var(--green-dark); padding: 24px 48px; display: flex; justify-content: center; gap: 60px; }
+.bstat { text-align: center; }
+.bstat-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 28px; color: var(--green-light); display: block; }
+.bstat-lbl { font-size: 11px; color: rgba(249,246,240,0.4); text-transform: uppercase; letter-spacing: 1px; }
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+  header, .app { padding-left: 20px; padding-right: 20px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .bottom-bar { gap: 30px; padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-text">Green Edge <span>Landscaping</span></div>
+  </div>
+  <div class="header-tag">Proposal Generator</div>
+</header>
+
+<div class="app">
+  <div class="page-title">Client Proposal Generator</div>
+  <div class="page-sub">Fill in the job details and get a professional proposal in seconds.</div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">📋</div>
+        <div class="panel-title">Job Details</div>
+      </div>
+
+      <div class="field">
+        <label>Client Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Sarah Johnson">
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Property Type</label>
+          <select id="propertyType">
+            <option value="residential home">Residential Home</option>
+            <option value="commercial property">Commercial Property</option>
+            <option value="rental property">Rental Property</option>
+            <option value="HOA community">HOA Community</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Property Size</label>
+          <select id="propertySize">
+            <option value="small (under 5,000 sq ft)">Small (under 5k sqft)</option>
+            <option value="medium (5,000–15,000 sq ft)">Medium (5–15k sqft)</option>
+            <option value="large (15,000+ sq ft)">Large (15k+ sqft)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Services Needed</label>
+        <div class="services-grid">
+          <div class="svc-check" onclick="toggleSvc(this)"><div class="check-box">✓</div><span>🌿 Lawn Mowing</span></div>
+          <div class="svc-check" onclick="toggleSvc(this)"><div class="check-box">✓</div><span>🌳 Tree Trimming</span></div>
+          <div class="svc-check" onclick="toggleSvc(this)"><div class="check-box">✓</div><span>🍂 Yard Cleanup</span></div>
+          <div class="svc-check" onclick="toggleSvc(this)"><div class="check-box">✓</div><span>🌺 Mulching</span></div>
+          <div class="svc-check" onclick="toggleSvc(this)"><div class="check-box">✓</div><span>✂️ Edging</span></div>
+          <div class="svc-check" onclick="toggleSvc(this)"><div class="check-box">✓</div><span>🍃 Leaf Removal</span></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Quote Amount</label>
+          <input type="text" id="price" placeholder="e.g. $350">
+        </div>
+        <div class="field">
+          <label>Frequency</label>
+          <select id="frequency">
+            <option value="one-time">One-Time</option>
+            <option value="weekly">Weekly</option>
+            <option value="bi-weekly">Bi-Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="seasonal">Seasonal</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Special Notes (optional)</label>
+        <textarea id="notes" rows="3" placeholder="e.g. gate code needed, dog in yard..."></textarea>
+      </div>
+
+      <button class="generate-btn" id="genBtn" onclick="generate()">
+        🌿 Generate Proposal
+      </button>
+    </div>
+
+    <div class="output-panel">
+      <div class="output-top">
+        <div class="panel-header" style="margin:0;padding:0;border:none;">
+          <div class="panel-icon">📄</div>
+          <div class="panel-title">Your Proposal</div>
+        </div>
+        <button class="action-btn" id="copyBtn" onclick="copyProposal()">Copy</button>
+      </div>
+
+      <div class="output-body">
+        <div class="placeholder" id="placeholder">
+          <div class="placeholder-leaf">🌿</div>
+          <p>Fill in the job details and generate a professional proposal</p>
+        </div>
+        <div class="loading" id="loading">
+          <div class="leaf-spin">🌿</div>
+          <p>Writing your proposal...</p>
+        </div>
+        <div class="proposal-output" id="proposalOutput"></div>
+      </div>
+
+      <div class="stats-row" id="statsRow">
+        <div class="stat-item"><span class="stat-val" id="wordCount">0</span><span class="stat-lbl">Words</span></div>
+        <div class="stat-item"><span class="stat-val" id="genTime">0s</span><span class="stat-lbl">Generated In</span></div>
+        <div class="stat-item"><span class="stat-val">~25min</span><span class="stat-lbl">Time Saved</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <div class="bstat"><span class="bstat-num">~25min</span><span class="bstat-lbl">Avg manual writing time</span></div>
+  <div class="bstat"><span class="bstat-num">&lt;15s</span><span class="bstat-lbl">With this tool</span></div>
+  <div class="bstat"><span class="bstat-num">100%</span><span class="bstat-lbl">Your brand voice</span></div>
+</div>
+
+<script>
+  function toggleSvc(el) { el.classList.toggle('active'); }
+
+  function getServices() {
+    return Array.from(document.querySelectorAll('.svc-check.active'))
+      .map(el => el.querySelector('span').textContent.replace(/^.{2}/, '').trim());
+  }
+
+  function copyProposal() {
+    const text = document.getElementById('proposalOutput').textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  async function generate() {
+    const clientName = document.getElementById('clientName').value || 'Valued Client';
+    const propertyType = document.getElementById('propertyType').value;
+    const propertySize = document.getElementById('propertySize').value;
+    const price = document.getElementById('price').value;
+    const frequency = document.getElementById('frequency').value;
+    const notes = document.getElementById('notes').value;
+    const services = getServices();
+
+    if (services.length === 0) { alert('Please select at least one service.'); return; }
+
+    document.getElementById('placeholder').style.display = 'none';
+    document.getElementById('proposalOutput').style.display = 'none';
+    document.getElementById('statsRow').style.display = 'none';
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('genBtn').disabled = true;
+
+    const startTime = Date.now();
+
+    const prompt = `You are writing a client proposal on behalf of Green Edge Landscaping, a friendly but professional landscaping company.
+
+Write a warm, professional proposal for the following job:
+Client Name: ${clientName}
+Property Type: ${propertyType}
+Property Size: ${propertySize}
+Services: ${services.join(', ')}
+Price: ${price || 'to be confirmed'}
+Frequency: ${frequency}
+Special Notes: ${notes || 'None'}
+
+Write the proposal in this structure:
+1. Warm personalized greeting to ${clientName}
+2. Brief paragraph confirming what you understood about their needs
+3. Clear description of what Green Edge will do (flowing sentences, not bullets)
+4. The investment (price) and schedule
+5. What makes Green Edge different — reliability, attention to detail (2 sentences max)
+6. Friendly call to action
+
+Tone: Warm, confident, professional — like a trusted local business.
+Length: 200-280 words. No bullet points. No headers. Just paragraphs.`;
+
+    try {
+      // Calls YOUR secure backend — API key never exposed
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await response.json();
+      const text = data.result || data.error || 'Something went wrong.';
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+      const words = text.trim().split(/\s+/).length;
+
+      document.getElementById('loading').style.display = 'none';
+      const out = document.getElementById('proposalOutput');
+      out.style.display = 'block';
+      out.textContent = text;
+
+      document.getElementById('wordCount').textContent = words;
+      document.getElementById('genTime').textContent = elapsed + 's';
+      document.getElementById('statsRow').style.display = 'flex';
+
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      const out = document.getElementById('proposalOutput');
+      out.style.display = 'block';
+      out.textContent = 'Error connecting. Please try again.';
+    }
+
+    document.getElementById('genBtn').disabled = false;
+  }
+</script>
+</body>
+</html>
